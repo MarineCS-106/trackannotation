@@ -45,11 +45,188 @@ As a rule, we don't put `install.packages()` in scripts or Quarto documents. It'
 
 ### Loading movement data
 
+Shapefiles are composed of multiple files.
+
+-   .shp = shape itself (points, lines, and polygons)
+
+-   .prj = projection (lat/lon in the case of our makos)
+
+-   .dbf = attribute table (an associated data frame with the geometries)
+
+```{r}
+#| label: load-vect
+
+library(terra)
+library(tidyterra)
+library(tidyverse)
+library(ggthemes)
+
+makos <- vect("data/makos.shp")
+makos
+
+```
+
+-   Vector data
+
+-   Our geometries are points (individual locations)
+
+-   Attributes = associated data frame
+
+We can treat vectors a lot like data frames because of the attribute table
+
+```{r}
+#| label: vector-df
+
+# What variables are in the attribute table?
+names(makos)
+
+# What is the northernmost latitude per shark?
+makos %>% 
+  group_by(shark) %>% 
+  summarize(northernmost = max(lat)) %>% 
+  view()
+
+```
+
+A quick visualization
+
+```{r}
+#| label: plot-makos
+
+plot(makos)
+
+```
+
+To recap:
+
+-   Vector data lives in shapefiles (\*.shp)
+
+-   Load vector data with `terra::vect()`
+
+-   Vector data has an attribute table, which is basically a data frame
+
 ### Loading environmental data
+
+What `vect()` is to vectors, `rast()` is to rasters
+
+```{r}
+#| label: load-raster
+
+sst <- rast("data/ep_sst.tiff")
+sst
+
+```
+
+Note:
+
+-   This is raster data
+
+-   Rasters are grid-based, therefore lat/lon isn't terribly helpful
+
+-   Notice the projection, extent, and resolution. This is a 3d surface flattened onto a 2d map (i.e., projected)
+
+Quick visualization
+
+```{r}
+#| label: plot-raster
+
+plot(sst)
+
+```
+
+Summarize and manipulate rasters
+
+```{r}
+#| label: summ-raster
+
+# Mean temperature
+global(sst, function(x) mean(x, na.rm = TRUE))
+
+# Convert C to F
+sst_f <- sst * 9 / 5 + 32
+sst_f
+
+```
+
+Recap:
+
+-   Raster data lives in .tiff files
+
+-   Rasters describe *grids* of data, so must be projected (no lat/lon)
+
+-   `global()` for summary statistics, regular arithmetic for arithmetic operations (e.g. changing units)
 
 ### Mapping spatial data
 
+Let's make a proper map. tidyterra (a package) lets us use ggplot to make maps with vector and raster data.
+
+Let's each choose one shark to plot
+
+```{r}
+#| label: choose-shark
+
+set.seed(1242)
+
+my_mako_id <- sample(unique(makos$shark), 1)
+my_mako <- filter(makos, shark == my_mako_id)
+my_mako
+
+```
+
+Put raster and vector data on the map
+
+```{r}
+#| label: nice-map
+
+ggplot() + 
+  geom_spatraster(data = sst) +
+  geom_spatvector(data = my_mako)
+
+```
+
+Let's make that map prettier
+
+```{r}
+#| label: pretty-map
+
+mako_grat <- graticule(lon = seq(-160, -100, by = 15),
+                       lat = seq(0, 50, by = 10))
+
+ggplot() + 
+  geom_spatraster(data = sst) +
+  geom_spatvector(data = mako_grat, color = "grey80") +
+  geom_spatvector(data = my_mako) +
+  scale_fill_whitebox_c(palette = "muted",
+                        na.value = "white") +
+  theme_map() +
+  theme(legend.position = "inside",
+        legend.position.inside = c(1, 1),
+        legend.justification = c(1, 1))
+
+```
+
 ### Annotating tracks
+
+Once we've superimposed a vector onto a raster, annotation becomes a snap
+
+```{r}
+#| label: extraction
+
+my_sst <- terra::extract(sst, my_mako)
+head(my_sst)
+my_mako$sst <- my_sst$sst_c
+
+```
+
+So what's the thermal niche?
+
+```{r}
+#| label: thermal-niche
+
+ggplot(my_mako, aes(sst)) +
+  geom_histogram()
+
+```
 
 ## Challenge
 
