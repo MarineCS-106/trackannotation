@@ -1,0 +1,68 @@
+---
+title: "Track Annotation"
+format: html
+bibliography: references.bib
+---
+
+## Background
+
+Makos (*Isurus*) are among the largest and fastest of sharks. The burst speed of a mako has been estimated at 5 m s^-1^ [@waller2023]. For context, the world record for the 25 m freestyle clocked in at a paltry 1.3 m s^-1^ [^1]. Like many marine predators, makos are capable of traveling extraordinary distances. Which prompts the question: why? Here we will investigate the potential role of temperature on seasonal movements of makos.
+
+[^1]: Makos aren't the fastest swimmers in the ocean, though. Billfish (including sailfish and marlin) can reach bursts of 7 m s^-1^ [@marras2015].
+
+## Data
+
+Our data for this lab include the movement trajectories of shortfin makos (*I. oxyrinchus*) and mean annual sea surface temperatures, both in the Pacific Ocean.
+
+### Mako movement data
+
+The NOAA Southwest Fisheries Science Center tracked 87 shortfin makos during the years 2003-2014 using fin-mounted Argos tags [@byrne2024]. Satellite transmitters can only send signals when the tag breaks the surface of the water, leading to inconsistent sampling rates. The data we're using has been processed in two ways. First, biologically implausible location records were removed using speed, distance, and angle filters. Second, a statistical model called a *state-space model* was used to estimate the most likely track and interpolate regular locations from the irregular raw data.
+
+### Sea surface temperatures
+
+Mean annual sea surface temperature data were downloaded from the World Ocean Atlas.
+
+## Lab activity
+
+### Install dependencies
+
+The following packages are useful for geospatial analysis in R. Install them before proceeding.
+
+```{r}
+#| eval: false
+
+install.packages(c(
+  "terra",
+  "tidyterra",
+  "ggthemes"
+))
+
+```
+
+::: callout-note
+As a rule, we don't put `install.packages()` in scripts or Quarto documents. It's included here for your convenience only. Notice the comment at the start of the code chunk that reads `#| eval: false`. This chunk option tells R *not* to run this code when rendering the document.
+:::
+
+### Loading movement data
+
+### Loading environmental data
+
+### Mapping spatial data
+
+### Annotating tracks
+
+## Challenge
+
+In this lab, we annotated tracks with *static* environmental data. Static environmental data doesn't change with time. However, the environment is constantly changing so we often want to annotate tracks with *dynamic* environmental data.
+
+The challenge for this lab is to re-annotate the tracks using monthly sea surface temperatures. Specifically, you'll need to:
+
+1.  Download monthly average sea surface temperature data from the [World Ocean Atlas](https://www.ncei.noaa.gov/access/world-ocean-atlas-2023/).
+2.  Create rasters for each month and combine them into a *multi-layer raster*.
+3.  Extract temperatures for each mako shark location, keeping only the temperatures for the correct month.
+
+Use these extracted temperatures to investigate the question: Do the seasonal movements of mako sharks help them track consistent sea surface temperatures?
+
+Lab challenges should be solved in their own Quarto document. They will be assessed according to the *Developing Reproducible Workflows* standards (see the syllabus). Your methods should be clearly described, the code should be readable, and the analysis should be reproducible (i.e., someone else should be able to clone your repo and render your Quarto document).
+
+These are called challenges for a reason - they're going to be difficult! Leave yourself enough time to get stuck and figure out solutions. You are encouraged to come to office hours or set up meetings with your instructor for help.
