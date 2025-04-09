@@ -6,7 +6,7 @@ bibliography: references.bib
 
 ## Background
 
-Makos (*Isurus*) are among the largest and fastest of sharks. The burst speed of a mako has been estimated at 5 m s^-1^ [@waller2023]. For context, the world record for the 25 m freestyle clocked in at a paltry 1.3 m s^-1^ [^1]. Like many marine predators, makos are capable of traveling extraordinary distances. Which prompts the question: why? Here we will investigate the potential role of temperature on seasonal movements of makos.
+Makos (*Isurus*) are among the largest and fastest of sharks. The burst speed of a mako has been estimated at 5 m s^-1^ [@waller2023]. For context, the world record for the 25 m freestyle clocked in at a paltry 1.3 m s^-1^ [^1]. Like many marine predators, makos are capable of traveling extraordinary distances. These large-scale movements may expose makos to a wide range of environmental conditions. Here, we'll combine tracking and environmental data to quantify the *thermal niche* of Pacific makos
 
 [^1]: Makos aren't the fastest swimmers in the ocean, though. Billfish (including sailfish and marlin) can reach bursts of 7 m s^-1^ [@marras2015].
 
@@ -61,7 +61,11 @@ The challenge for this lab is to re-annotate the tracks using monthly sea surfac
 2.  Create rasters for each month and combine them into a *multi-layer raster*.
 3.  Extract temperatures for each mako shark location, keeping only the temperatures for the correct month.
 
-Use these extracted temperatures to investigate the question: Do the seasonal movements of mako sharks help them track consistent sea surface temperatures?
+Use these extracted temperatures to investigate the question:
+
+*Do the seasonal movements of mako sharks affect their thermal niche?*
+
+The thermal niche we identified in lab today was based on mean annual temperatures, which may not reflect the temperatures actually experienced by makos. For example, a seasonal migration that goes north in the summer and south in the winter may result in a narrower thermal niche.
 
 Lab challenges should be solved in their own Quarto document. They will be assessed according to the *Developing Reproducible Workflows* standards (see the syllabus). Your methods should be clearly described, the code should be readable, and the analysis should be reproducible (i.e., someone else should be able to clone your repo and render your Quarto document).
 
